@@ -32,6 +32,12 @@
                 {% endif %}
             </div>
             <div class="nav-actions" id="nav-actions">
+                <div class="theme-switcher">
+                    <button onclick="setTheme('nordic')" class="theme-btn nordic" title="Nordic Frost"></button>
+                    <button onclick="setTheme('emerald')" class="theme-btn emerald" title="Emerald Aurora"></button>
+                    <button onclick="setTheme('sunset')" class="theme-btn sunset" title="Sunset Mirage"></button>
+                    <button onclick="setTheme('violet')" class="theme-btn violet" title="Midnight Violet"></button>
+                </div>
                 {% if user.is_authenticated %}
                 <span class="nav-greeting">Hey, <strong>{{ user.first_name }}</strong> 👋</span>
                 <a href="{% url 'logout' %}" class="btn btn-outline btn-sm" id="nav-logout">Logout</a>
@@ -111,6 +117,24 @@
                 setTimeout(() => alert.remove(), 300);
             }, 5000);
         });
+
+        // Theme Switcher Logic
+        function setTheme(theme) {
+            document.body.classList.remove('theme-emerald', 'theme-sunset', 'theme-violet');
+            if (theme !== 'nordic') {
+                document.body.classList.add('theme-' + theme);
+            }
+            localStorage.setItem('studsafe-theme', theme);
+
+            // Highlight active button
+            document.querySelectorAll('.theme-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.classList.contains(theme));
+            });
+        }
+
+        // Initialize theme
+        const savedTheme = localStorage.getItem('studsafe-theme') || 'nordic';
+        setTheme(savedTheme);
 
         // Navbar scroll effect
         window.addEventListener('scroll', () => {
