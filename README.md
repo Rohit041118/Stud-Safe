@@ -1,0 +1,2 @@
+# Stud-Safe
+AICTE Project
