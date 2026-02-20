@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block title %}Sign Up — Stud Safe{% endblock %}
+
+{% block content %}
+<section class="auth-section" id="signup-section">
+    <div class="auth-container">
+        <div class="auth-visual">
+            <div class="auth-visual-content">
+                <h2>Join the <span class="gradient-text">StudSafe</span> Community</h2>
+                <p>Create an account to upload your notes, bookmark favorites, and help fellow students succeed.</p>
+                <div class="auth-visual-features">
+                    <div class="avf-item"><span>📤</span> Upload unlimited notes</div>
+                    <div class="avf-item"><span>🔖</span> Bookmark your favorites</div>
+                    <div class="avf-item"><span>📊</span> Track your contributions</div>
+                    <div class="avf-item"><span>🎓</span> 100% free forever</div>
+                </div>
+            </div>
+        </div>
+        <div class="auth-form-container" id="signup-form-container">
+            <div class="auth-form-header">
+                <h1>Create Account</h1>
+                <p>Already have an account? <a href="{% url 'login' %}" id="signup-login-link">Sign in</a></p>
+            </div>
+            <form method="post" class="auth-form" id="signup-form">
+                {% csrf_token %}
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="signup-first-name">First Name</label>
+                        {{ form.first_name }}
+                        {% if form.first_name.errors %}
+                        <span class="form-error">{{ form.first_name.errors.0 }}</span>
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        <label for="signup-last-name">Last Name</label>
+                        {{ form.last_name }}
+                        {% if form.last_name.errors %}
+                        <span class="form-error">{{ form.last_name.errors.0 }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="signup-username">Username</label>
+                    {{ form.username }}
+                    {% if form.username.errors %}
+                    <span class="form-error">{{ form.username.errors.0 }}</span>
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="signup-email">Email</label>
+                    {{ form.email }}
+                    {% if form.email.errors %}
+                    <span class="form-error">{{ form.email.errors.0 }}</span>
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="signup-password1">Password</label>
+                    {{ form.password1 }}
+                    {% if form.password1.errors %}
+                    <span class="form-error">{{ form.password1.errors.0 }}</span>
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="signup-password2">Confirm Password</label>
+                    {{ form.password2 }}
+                    {% if form.password2.errors %}
+                    <span class="form-error">{{ form.password2.errors.0 }}</span>
+                    {% endif %}
+                </div>
+                <button type="submit" class="btn btn-primary btn-lg btn-full" id="signup-submit">Create Account</button>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}

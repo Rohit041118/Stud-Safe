@@ -1,0 +1,127 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Stud Safe — The ultimate student notes sharing platform. Upload, browse, and download notes organized by subject.">
+    <title>{% block title %}Stud Safe{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="main-navbar">
+        <div class="nav-container">
+            <a href="{% url 'home' %}" class="nav-logo" id="nav-logo">
+                <span class="logo-icon">🛡️</span>
+                <span class="logo-text">Stud<span class="logo-accent">Safe</span></span>
+            </a>
+            <div class="nav-links" id="nav-links">
+                <a href="{% url 'home' %}" class="nav-link" id="nav-home">Home</a>
+                <a href="{% url 'browse' %}" class="nav-link" id="nav-browse">Browse Notes</a>
+                {% if user.is_authenticated %}
+                <a href="{% url 'upload' %}" class="nav-link" id="nav-upload">Upload</a>
+                <a href="{% url 'dashboard' %}" class="nav-link" id="nav-dashboard">Dashboard</a>
+                {% endif %}
+            </div>
+            <div class="nav-actions" id="nav-actions">
+                {% if user.is_authenticated %}
+                <span class="nav-greeting">Hey, <strong>{{ user.first_name }}</strong> 👋</span>
+                <a href="{% url 'logout' %}" class="btn btn-outline btn-sm" id="nav-logout">Logout</a>
+                {% else %}
+                <a href="{% url 'login' %}" class="btn btn-outline btn-sm" id="nav-login">Login</a>
+                <a href="{% url 'signup' %}" class="btn btn-primary btn-sm" id="nav-signup">Sign Up</a>
+                {% endif %}
+            </div>
+            <button class="nav-toggle" id="nav-toggle"
+                onclick="document.querySelector('.nav-links').classList.toggle('active'); document.querySelector('.nav-actions').classList.toggle('active');">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Messages -->
+    {% if messages %}
+    <div class="messages-container" id="messages-container">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}" id="alert-{{ forloop.counter }}">
+            <span>{{ message }}</span>
+            <button class="alert-close" onclick="this.parentElement.remove()">✕</button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Main Content -->
+    <main class="main-content" id="main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer" id="main-footer">
+        <div class="footer-container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <div class="footer-logo">
+                        <span class="logo-icon">🛡️</span>
+                        <span class="logo-text">Stud<span class="logo-accent">Safe</span></span>
+                    </div>
+                    <p class="footer-desc">Your safe space for sharing and discovering quality study notes. Built by
+                        students, for students.</p>
+                </div>
+                <div class="footer-links-group">
+                    <h4>Quick Links</h4>
+                    <a href="{% url 'home' %}">Home</a>
+                    <a href="{% url 'browse' %}">Browse Notes</a>
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'upload' %}">Upload Notes</a>
+                    <a href="{% url 'dashboard' %}">Dashboard</a>
+                    {% else %}
+                    <a href="{% url 'signup' %}">Sign Up</a>
+                    <a href="{% url 'login' %}">Login</a>
+                    {% endif %}
+                </div>
+                <div class="footer-links-group">
+                    <h4>Subjects</h4>
+                    <a href="{% url 'browse' %}">All Notes</a>
+                    <a href="{% url 'browse' %}?subject=1">Mathematics</a>
+                    <a href="{% url 'browse' %}?subject=2">Science</a>
+                    <a href="{% url 'browse' %}?subject=3">English</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 StudSafe. All rights reserved. Made with ❤️ for students.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Auto-hide alerts after 5 seconds
+        document.querySelectorAll('.alert').forEach(alert => {
+            setTimeout(() => {
+                alert.style.opacity = '0';
+                alert.style.transform = 'translateY(-10px)';
+                setTimeout(() => alert.remove(), 300);
+            }, 5000);
+        });
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('main-navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,228 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Stud Safe — Share & Discover Student Notes{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero" id="hero-section">
+    <div class="hero-bg-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
+    </div>
+    <div class="hero-container">
+        <div class="hero-content">
+            <div class="hero-badge" id="hero-badge">
+                <span class="badge-dot"></span>
+                <span>Trusted by students everywhere</span>
+            </div>
+            <h1 class="hero-title" id="hero-title">
+                Your Notes,<br>
+                <span class="gradient-text">Safe & Shared</span>
+            </h1>
+            <p class="hero-subtitle" id="hero-subtitle">
+                Upload your study notes, discover resources from fellow students, and ace your exams together. StudSafe
+                makes knowledge sharing effortless.
+            </p>
+            <div class="hero-actions" id="hero-actions">
+                {% if user.is_authenticated %}
+                <a href="{% url 'upload' %}" class="btn btn-primary btn-lg" id="hero-upload-btn">
+                    <span>📤</span> Upload Notes
+                </a>
+                <a href="{% url 'browse' %}" class="btn btn-glass btn-lg" id="hero-browse-btn">
+                    Browse Library →
+                </a>
+                {% else %}
+                <a href="{% url 'signup' %}" class="btn btn-primary btn-lg" id="hero-signup-btn">
+                    Get Started Free
+                </a>
+                <a href="{% url 'browse' %}" class="btn btn-glass btn-lg" id="hero-browse-btn">
+                    Browse Notes →
+                </a>
+                {% endif %}
+            </div>
+            <div class="hero-stats" id="hero-stats">
+                <div class="stat">
+                    <span class="stat-number">{{ total_notes }}</span>
+                    <span class="stat-label">Notes Shared</span>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat">
+                    <span class="stat-number">{{ total_subjects }}</span>
+                    <span class="stat-label">Subjects</span>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat">
+                    <span class="stat-number">Free</span>
+                    <span class="stat-label">Forever</span>
+                </div>
+            </div>
+        </div>
+        <div class="hero-visual" id="hero-visual">
+            <div class="floating-card card-1">
+                <div class="fc-icon">📐</div>
+                <div class="fc-text">Mathematics</div>
+                <div class="fc-bar">
+                    <div class="fc-bar-fill" style="width: 85%"></div>
+                </div>
+            </div>
+            <div class="floating-card card-2">
+                <div class="fc-icon">🔬</div>
+                <div class="fc-text">Science</div>
+                <div class="fc-bar">
+                    <div class="fc-bar-fill" style="width: 72%"></div>
+                </div>
+            </div>
+            <div class="floating-card card-3">
+                <div class="fc-icon">📖</div>
+                <div class="fc-text">English</div>
+                <div class="fc-bar">
+                    <div class="fc-bar-fill" style="width: 65%"></div>
+                </div>
+            </div>
+            <div class="floating-card card-4">
+                <div class="fc-icon">💻</div>
+                <div class="fc-text">Computer Sci</div>
+                <div class="fc-bar">
+                    <div class="fc-bar-fill" style="width: 90%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="features-section" id="features-section">
+    <div class="section-container">
+        <div class="section-header">
+            <span class="section-tag">Why StudSafe?</span>
+            <h2 class="section-title">Everything you need to <span class="gradient-text">study smarter</span></h2>
+            <p class="section-desc">A platform designed with students in mind. Simple, fast, and completely free.</p>
+        </div>
+        <div class="features-grid" id="features-grid">
+            <div class="feature-card" id="feature-upload">
+                <div class="feature-icon-wrap">
+                    <span class="feature-icon">📤</span>
+                </div>
+                <h3>Easy Upload</h3>
+                <p>Upload PDFs, docs, images, and more in seconds. Organize by subject for easy discovery.</p>
+            </div>
+            <div class="feature-card" id="feature-browse">
+                <div class="feature-icon-wrap">
+                    <span class="feature-icon">🔍</span>
+                </div>
+                <h3>Smart Search</h3>
+                <p>Find exactly what you need with powerful search and subject filters. No digging required.</p>
+            </div>
+            <div class="feature-card" id="feature-download">
+                <div class="feature-icon-wrap">
+                    <span class="feature-icon">⬇️</span>
+                </div>
+                <h3>Instant Download</h3>
+                <p>Download any notes with a single click. Access study materials anytime, anywhere.</p>
+            </div>
+            <div class="feature-card" id="feature-bookmark">
+                <div class="feature-icon-wrap">
+                    <span class="feature-icon">🔖</span>
+                </div>
+                <h3>Bookmarks</h3>
+                <p>Save your favorite notes for later. Build your personal study library effortlessly.</p>
+            </div>
+            <div class="feature-card" id="feature-subjects">
+                <div class="feature-icon-wrap">
+                    <span class="feature-icon">📚</span>
+                </div>
+                <h3>Subject Categories</h3>
+                <p>Notes organized by subject — Math, Science, English, Computer Science, and more.</p>
+            </div>
+            <div class="feature-card" id="feature-free">
+                <div class="feature-icon-wrap">
+                    <span class="feature-icon">🎓</span>
+                </div>
+                <h3>100% Free</h3>
+                <p>No subscriptions, no paywalls. Knowledge should be accessible to every student.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Subjects Section -->
+{% if subjects %}
+<section class="subjects-section" id="subjects-section">
+    <div class="section-container">
+        <div class="section-header">
+            <span class="section-tag">Explore</span>
+            <h2 class="section-title">Browse by <span class="gradient-text">Subject</span></h2>
+            <p class="section-desc">Find notes organized neatly by subject area.</p>
+        </div>
+        <div class="subjects-grid" id="subjects-grid">
+            {% for subject in subjects %}
+            <a href="{% url 'browse' %}?subject={{ subject.id }}" class="subject-card" id="subject-{{ subject.id }}">
+                <span class="subject-icon">{{ subject.icon }}</span>
+                <h3 class="subject-name">{{ subject.name }}</h3>
+                <span class="subject-count">{{ subject.note_count }} note{{ subject.note_count|pluralize }}</span>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Recent Notes Section -->
+{% if recent_notes %}
+<section class="recent-section" id="recent-section">
+    <div class="section-container">
+        <div class="section-header">
+            <span class="section-tag">Latest</span>
+            <h2 class="section-title">Recently <span class="gradient-text">Uploaded</span></h2>
+            <p class="section-desc">Check out the latest notes shared by fellow students.</p>
+        </div>
+        <div class="notes-grid" id="recent-notes-grid">
+            {% for note in recent_notes %}
+            <div class="note-card" id="note-card-{{ note.id }}">
+                <div class="note-card-header">
+                    <span class="note-subject-badge">{{ note.subject.icon }} {{ note.subject.name }}</span>
+                    <span class="note-downloads">⬇️ {{ note.downloads }}</span>
+                </div>
+                <h3 class="note-title">{{ note.title }}</h3>
+                <p class="note-desc">{{ note.description|truncatewords:15 }}</p>
+                <div class="note-card-footer">
+                    <span class="note-author">By {{ note.uploaded_by.first_name }} {{ note.uploaded_by.last_name
+                        }}</span>
+                    <span class="note-date">{{ note.created_at|timesince }} ago</span>
+                </div>
+                <div class="note-card-actions">
+                    <a href="{% url 'download' note.id %}" class="btn btn-primary btn-sm">Download</a>
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'toggle_bookmark' note.id %}" class="btn btn-outline btn-sm">🔖</a>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="section-cta">
+            <a href="{% url 'browse' %}" class="btn btn-glass btn-lg">View All Notes →</a>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- CTA Section -->
+<section class="cta-section" id="cta-section">
+    <div class="cta-container">
+        <div class="cta-bg-shapes">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+        </div>
+        <h2 class="cta-title">Ready to share your notes?</h2>
+        <p class="cta-desc">Join thousands of students who are already sharing and discovering quality study materials
+            on StudSafe.</p>
+        {% if user.is_authenticated %}
+        <a href="{% url 'upload' %}" class="btn btn-white btn-lg" id="cta-upload-btn">Upload Your Notes</a>
+        {% else %}
+        <a href="{% url 'signup' %}" class="btn btn-white btn-lg" id="cta-signup-btn">Create Free Account</a>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

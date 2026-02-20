@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+
+{% block title %}Upload Notes — Stud Safe{% endblock %}
+
+{% block content %}
+<section class="upload-section" id="upload-section">
+    <div class="upload-container">
+        <div class="upload-header">
+            <h1 class="page-title">Upload <span class="gradient-text">Notes</span></h1>
+            <p class="page-subtitle">Share your study materials with the community. Help others while building your
+                contributor profile!</p>
+        </div>
+        <form method="post" enctype="multipart/form-data" class="upload-form" id="upload-form">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="note-title">Title</label>
+                {{ form.title }}
+                {% if form.title.errors %}
+                <span class="form-error">{{ form.title.errors.0 }}</span>
+                {% endif %}
+            </div>
+            <div class="form-group">
+                <label for="note-subject">Subject</label>
+                {{ form.subject }}
+                {% if form.subject.errors %}
+                <span class="form-error">{{ form.subject.errors.0 }}</span>
+                {% endif %}
+            </div>
+            <div class="form-group">
+                <label for="note-description">Description</label>
+                {{ form.description }}
+                {% if form.description.errors %}
+                <span class="form-error">{{ form.description.errors.0 }}</span>
+                {% endif %}
+            </div>
+            <div class="form-group">
+                <label for="note-file">File</label>
+                <div class="file-upload-area" id="file-upload-area">
+                    <div class="file-upload-content">
+                        <span class="file-upload-icon">📄</span>
+                        <p class="file-upload-text">Drag & drop your file here, or <span class="file-upload-link">click
+                                to browse</span></p>
+                        <p class="file-upload-hint">Supports PDF, DOC, DOCX, PPT, PPTX, TXT, JPG, PNG</p>
+                    </div>
+                    {{ form.file }}
+                </div>
+                {% if form.file.errors %}
+                <span class="form-error">{{ form.file.errors.0 }}</span>
+                {% endif %}
+            </div>
+            <button type="submit" class="btn btn-primary btn-lg btn-full" id="upload-submit">📤 Upload Notes</button>
+        </form>
+    </div>
+</section>
+
+<script>
+    // File upload area interactivity
+    const fileInput = document.getElementById('note-file');
+    const uploadArea = document.getElementById('file-upload-area');
+    const uploadText = uploadArea.querySelector('.file-upload-text');
+
+    uploadArea.addEventListener('click', () => fileInput.click());
+    uploadArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        uploadArea.classList.add('dragover');
+    });
+    uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('dragover'));
+    uploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        uploadArea.classList.remove('dragover');
+        fileInput.files = e.dataTransfer.files;
+        updateFileName();
+    });
+    fileInput.addEventListener('change', updateFileName);
+
+    function updateFileName() {
+        if (fileInput.files.length > 0) {
+            uploadText.textContent = fileInput.files[0].name;
+            uploadArea.classList.add('has-file');
+        }
+    }
+</script>
+{% endblock %}

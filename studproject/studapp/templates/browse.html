@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+
+{% block title %}Browse Notes — Stud Safe{% endblock %}
+
+{% block content %}
+<section class="browse-section" id="browse-section">
+    <div class="section-container">
+        <!-- Header -->
+        <div class="browse-header" id="browse-header">
+            <div>
+                <h1 class="page-title">Browse <span class="gradient-text">Notes</span></h1>
+                <p class="page-subtitle">Discover study materials shared by students like you.</p>
+            </div>
+            {% if user.is_authenticated %}
+            <a href="{% url 'upload' %}" class="btn btn-primary" id="browse-upload-btn">📤 Upload Notes</a>
+            {% endif %}
+        </div>
+
+        <!-- Search & Filters -->
+        <div class="browse-filters" id="browse-filters">
+            <form method="get" class="search-form" id="search-form">
+                <div class="search-input-wrap">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" name="q" class="search-input"
+                        placeholder="Search notes by title, subject, or keyword..." value="{{ search_query }}"
+                        id="search-input">
+                </div>
+                <button type="submit" class="btn btn-primary" id="search-submit">Search</button>
+            </form>
+            <div class="subject-filters" id="subject-filters">
+                <a href="{% url 'browse' %}" class="filter-chip {% if not current_subject %}active{% endif %}"
+                    id="filter-all">All</a>
+                {% for subject in subjects %}
+                <a href="{% url 'browse' %}?subject={{ subject.id }}"
+                    class="filter-chip {% if current_subject == subject.id|stringformat:'d' %}active{% endif %}"
+                    id="filter-{{ subject.id }}">
+                    {{ subject.icon }} {{ subject.name }} <span class="chip-count">{{ subject.note_count }}</span>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Notes Grid -->
+        {% if notes %}
+        <div class="notes-grid" id="notes-grid">
+            {% for note in notes %}
+            <div class="note-card" id="note-{{ note.id }}">
+                <div class="note-card-header">
+                    <span class="note-subject-badge">{{ note.subject.icon }} {{ note.subject.name }}</span>
+                    <span class="note-downloads">⬇️ {{ note.downloads }}</span>
+                </div>
+                <h3 class="note-title">{{ note.title }}</h3>
+                <p class="note-desc">{{ note.description|truncatewords:20 }}</p>
+                <div class="note-card-footer">
+                    <span class="note-author">By {{ note.uploaded_by.first_name }} {{ note.uploaded_by.last_name
+                        }}</span>
+                    <span class="note-date">{{ note.created_at|timesince }} ago</span>
+                </div>
+                <div class="note-card-actions">
+                    <a href="{% url 'download' note.id %}" class="btn btn-primary btn-sm" id="download-{{ note.id }}">⬇️
+                        Download</a>
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'toggle_bookmark' note.id %}" class="btn btn-outline btn-sm"
+                        id="bookmark-{{ note.id }}">🔖 Bookmark</a>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state" id="empty-state">
+            <div class="empty-icon">📭</div>
+            <h3>No notes found</h3>
+            <p>{% if search_query %}No results for "{{ search_query }}". Try a different search term.{% else %}No notes
+                have been uploaded yet. Be the first to share!{% endif %}</p>
+            {% if user.is_authenticated %}
+            <a href="{% url 'upload' %}" class="btn btn-primary">Upload First Note</a>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

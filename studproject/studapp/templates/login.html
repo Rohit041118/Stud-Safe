@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %}Login — Stud Safe{% endblock %}
+
+{% block content %}
+<section class="auth-section" id="login-section">
+    <div class="auth-container">
+        <div class="auth-visual">
+            <div class="auth-visual-content">
+                <h2>Welcome back to <span class="gradient-text">StudSafe</span></h2>
+                <p>Sign in to access your dashboard, manage your notes, and continue learning with the community.</p>
+                <div class="auth-visual-features">
+                    <div class="avf-item"><span>📚</span> Access your uploaded notes</div>
+                    <div class="avf-item"><span>🔖</span> View your bookmarks</div>
+                    <div class="avf-item"><span>⬇️</span> Download study materials</div>
+                    <div class="avf-item"><span>📊</span> Check your stats</div>
+                </div>
+            </div>
+        </div>
+        <div class="auth-form-container" id="login-form-container">
+            <div class="auth-form-header">
+                <h1>Sign In</h1>
+                <p>Don't have an account? <a href="{% url 'signup' %}" id="login-signup-link">Create one</a></p>
+            </div>
+            <form method="post" class="auth-form" id="login-form">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="login-username">Username</label>
+                    <input type="text" name="username" class="form-input" placeholder="Enter your username"
+                        id="login-username" required>
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Password</label>
+                    <input type="password" name="password" class="form-input" placeholder="Enter your password"
+                        id="login-password" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-lg btn-full" id="login-submit">Sign In</button>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}

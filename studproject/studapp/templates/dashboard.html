@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard — Stud Safe{% endblock %}
+
+{% block content %}
+<section class="dashboard-section" id="dashboard-section">
+    <div class="section-container">
+        <!-- Dashboard Header -->
+        <div class="dashboard-header" id="dashboard-header">
+            <div class="dashboard-welcome">
+                <h1 class="page-title">Welcome, <span class="gradient-text">{{ user.first_name }}</span> 👋</h1>
+                <p class="page-subtitle">Manage your notes and bookmarks from your personal dashboard.</p>
+            </div>
+            <a href="{% url 'upload' %}" class="btn btn-primary" id="dashboard-upload-btn">📤 Upload Notes</a>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="dashboard-stats" id="dashboard-stats">
+            <div class="dash-stat-card">
+                <div class="dash-stat-icon">📤</div>
+                <div class="dash-stat-info">
+                    <span class="dash-stat-number">{{ user_notes.count }}</span>
+                    <span class="dash-stat-label">Notes Uploaded</span>
+                </div>
+            </div>
+            <div class="dash-stat-card">
+                <div class="dash-stat-icon">🔖</div>
+                <div class="dash-stat-info">
+                    <span class="dash-stat-number">{{ user_bookmarks.count }}</span>
+                    <span class="dash-stat-label">Bookmarked</span>
+                </div>
+            </div>
+            <div class="dash-stat-card">
+                <div class="dash-stat-icon">⬇️</div>
+                <div class="dash-stat-info">
+                    <span class="dash-stat-number">{% widthratio 0 1 0 as total %}{% for note in user_notes %}{% if
+                        forloop.first %}{{ note.downloads }}{% endif %}{% endfor %}</span>
+                    <span class="dash-stat-label">Total Downloads</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- My Notes -->
+        <div class="dashboard-panel" id="my-notes-panel">
+            <h2 class="panel-title">📚 My Uploaded Notes</h2>
+            {% if user_notes %}
+            <div class="notes-grid">
+                {% for note in user_notes %}
+                <div class="note-card" id="my-note-{{ note.id }}">
+                    <div class="note-card-header">
+                        <span class="note-subject-badge">{{ note.subject.icon }} {{ note.subject.name }}</span>
+                        <span class="note-downloads">⬇️ {{ note.downloads }}</span>
+                    </div>
+                    <h3 class="note-title">{{ note.title }}</h3>
+                    <p class="note-desc">{{ note.description|truncatewords:15 }}</p>
+                    <div class="note-card-footer">
+                        <span class="note-date">Uploaded {{ note.created_at|timesince }} ago</span>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="empty-state-sm">
+                <p>You haven't uploaded any notes yet.</p>
+                <a href="{% url 'upload' %}" class="btn btn-primary btn-sm">Upload Your First Note</a>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Bookmarked Notes -->
+        <div class="dashboard-panel" id="bookmarks-panel">
+            <h2 class="panel-title">🔖 My Bookmarks</h2>
+            {% if user_bookmarks %}
+            <div class="notes-grid">
+                {% for bookmark in user_bookmarks %}
+                <div class="note-card" id="bookmark-note-{{ bookmark.note.id }}">
+                    <div class="note-card-header">
+                        <span class="note-subject-badge">{{ bookmark.note.subject.icon }} {{ bookmark.note.subject.name
+                            }}</span>
+                        <span class="note-downloads">⬇️ {{ bookmark.note.downloads }}</span>
+                    </div>
+                    <h3 class="note-title">{{ bookmark.note.title }}</h3>
+                    <p class="note-desc">{{ bookmark.note.description|truncatewords:15 }}</p>
+                    <div class="note-card-footer">
+                        <span class="note-author">By {{ bookmark.note.uploaded_by.first_name }}</span>
+                        <span class="note-date">{{ bookmark.note.created_at|timesince }} ago</span>
+                    </div>
+                    <div class="note-card-actions">
+                        <a href="{% url 'download' bookmark.note.id %}" class="btn btn-primary btn-sm">⬇️ Download</a>
+                        <a href="{% url 'toggle_bookmark' bookmark.note.id %}" class="btn btn-outline btn-sm">✕
+                            Remove</a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="empty-state-sm">
+                <p>You haven't bookmarked any notes yet.</p>
+                <a href="{% url 'browse' %}" class="btn btn-primary btn-sm">Browse Notes</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}
