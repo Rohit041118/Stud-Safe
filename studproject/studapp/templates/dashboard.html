@@ -33,8 +33,7 @@
             <div class="dash-stat-card">
                 <div class="dash-stat-icon">⬇️</div>
                 <div class="dash-stat-info">
-                    <span class="dash-stat-number">{% widthratio 0 1 0 as total %}{% for note in user_notes %}{% if
-                        forloop.first %}{{ note.downloads }}{% endif %}{% endfor %}</span>
+                    <span class="dash-stat-number">{{ total_downloads }}</span>
                     <span class="dash-stat-label">Total Downloads</span>
                 </div>
             </div>

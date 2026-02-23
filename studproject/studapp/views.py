@@ -3,7 +3,7 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http import FileResponse
-from django.db.models import Q, Count
+from django.db.models import Q, Count, Sum
 from .models import Note, Subject, Bookmark
 from .forms import SignUpForm, NoteUploadForm
 
@@ -122,9 +122,11 @@ def dashboard(request):
     """User dashboard showing their uploaded notes and bookmarks."""
     user_notes = Note.objects.filter(uploaded_by=request.user).select_related('subject')
     user_bookmarks = Bookmark.objects.filter(user=request.user).select_related('note', 'note__subject', 'note__uploaded_by')
+    total_downloads = user_notes.aggregate(total=Sum('downloads'))['total'] or 0
     context = {
         'user_notes': user_notes,
         'user_bookmarks': user_bookmarks,
+        'total_downloads': total_downloads,
     }
     return render(request, 'dashboard.html', context)
 
